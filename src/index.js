@@ -1,8 +1,9 @@
+require("dotenv").config();
 const Events = require("events");
 const { Application } = require("express");
+const { WebhookClient, MessageEmbed } = require("discord.js");
 
-// Change name of the class.
-module.exports = class Template {
+module.exports = class Discord {
     /**
      * 
      * @param {Events} mainEvent 
@@ -18,19 +19,50 @@ module.exports = class Template {
      * }} models 
      */
     constructor(mainEvent, server, models) {
-        // The event listner, which will be called when the event is emitted.
         this.mainEvent = mainEvent;
-        // The express server.
         this.server = server;
-        // The models for our database, like fetching from it or modified etc.
         this.models = models;
 
-        // Listen to a event and do a action.
-        // Now we are lisitng to the event "invoice_paid" which is emitted when a invoice is paid.
-        // returns invoice object.
+        this.discord_webhook_url = process.env.DISCORD_WEBHOOK_URL;
+
         this.mainEvent.on("invoice_paid", invoice => {
-            console.log(`Invoice paid ${invoice.id}`);
+            this.sendWebhook("Invoice paid", {
+                text: `Invoice ${invoice.id} has been paid.`,
+            })
         });
 
+        this.mainEvent.on("invoice_created", invoice => {
+            this.sendWebhook("Invoice created", {
+                text: `Invoice ${invoice.id} has been created.`,
+            })
+        });
+
+    }
+
+    /**
+     * 
+     * @param {String} title 
+     * @param {{
+     * embeds?: MessageEmbed[],
+     * text?: String,
+     * }} data 
+     */
+    sendWebhook(title, data)
+    {
+        const webhookClient = new WebhookClient({
+            url: this.discord_webhook_url
+        });
+
+        let d = {
+            title: title,
+        }
+
+        if(data.text)
+            d.content = data.text;
+
+        if(data.embeds)
+            d.embeds = data.embeds;
+
+        webhookClient.send(d);
     }
 }
