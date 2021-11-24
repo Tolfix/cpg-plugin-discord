@@ -27,13 +27,49 @@ module.exports = class Discord {
 
         this.mainEvent.on("invoice_paid", invoice => {
             this.sendWebhook("Invoice paid", {
-                text: `Invoice ${invoice.id} has been paid.`,
+                text: `Invoice \`id #${invoice.id}\` has been paid.`,
             })
         });
 
         this.mainEvent.on("invoice_created", invoice => {
             this.sendWebhook("Invoice created", {
-                text: `Invoice ${invoice.id} has been created.`,
+                text: `Invoice \`id #${invoice.id}\` has been created.`,
+            })
+        });
+
+        this.mainEvent.on("invoice_deleted", invoice => {
+            this.sendWebhook("Invoice created", {
+                text: `Invoice \`id #${invoice.id}\` has been deleted.`,
+            })
+        });
+
+        this.mainEvent.on("invoice_updated", invoice => {
+            this.sendWebhook("Invoice updated", {
+                text: `Invoice \`id #${invoice.id}\` has been updated.`,
+            })
+        });
+
+        this.mainEvent.on("invoice_notified", invoice => {
+            this.sendWebhook("Invoice notified", {
+                text: `Invoice \`id #${invoice.id}\` has been notified.`,
+            })
+        });
+
+        this.mainEvent.on("order_created", order => {
+            this.sendWebhook("order created", {
+                text: `Order \`id #${order.id}\` has been created.`,
+            })
+        });
+
+        this.mainEvent.on("order_deleted", order => {
+            this.sendWebhook("order created", {
+                text: `Order \`id #${order.id}\` has been deleted.`,
+            })
+        });
+
+        this.mainEvent.on("order_updated", order => {
+            this.sendWebhook("order updated", {
+                text: `Order \`id #${order.id}\` has been updated.`,
             })
         });
 
