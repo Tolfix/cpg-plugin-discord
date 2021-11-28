@@ -29,6 +29,10 @@ module.exports = class DiscordWebhook {
         if(!this.discord_webhook_url)
             return this.Logger.plugin("Discord webhook url not set");
 
+        this.sendWebhook("cpg-plugin-discord-webhook loaded", {
+            text: "cpg-plugin-discord-webhook loaded",
+        });
+
         this.mainEvent.on("invoice_paid", invoice => {
             this.sendWebhook("Invoice paid", {
                 text: `Invoice \`id #${invoice.id}\` has been paid.`,
