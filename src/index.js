@@ -3,7 +3,7 @@ const Events = require("events");
 const { Application } = require("express");
 const { WebhookClient, MessageEmbed } = require("discord.js");
 
-module.exports = class Discord {
+module.exports = class DiscordWebhook {
     /**
      * 
      * @param {Events} mainEvent 
@@ -18,12 +18,16 @@ module.exports = class Discord {
      *  TransactionsModel: TransactionsModel,
      * }} models 
      */
-    constructor(mainEvent, server, models) {
+    constructor(mainEvent, server, models, Logger) {
         this.mainEvent = mainEvent;
         this.server = server;
         this.models = models;
+        this.Logger = Logger;
 
         this.discord_webhook_url = process.env.DISCORD_WEBHOOK_URL;
+
+        if(!this.discord_webhook_url)
+            return this.Logger.plugin("Discord webhook url not set");
 
         this.mainEvent.on("invoice_paid", invoice => {
             this.sendWebhook("Invoice paid", {
