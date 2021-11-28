@@ -83,6 +83,24 @@ module.exports = class DiscordWebhook {
 
     }
 
+    getToken(url) 
+    {
+        let removeURL = url.replace('https://discord.com/api/webhooks/', '');
+        let parser = removeURL.split(/\//g);
+        let token = parser[1];
+      
+        return token;
+    }
+      
+    getID(url) 
+    {
+        let removeURL = url.replace('https://discord.com/api/webhooks/', '');
+        let parser = removeURL.split(/\//g);
+        let ID = parser[0];
+      
+        return ID;
+    }
+
     /**
      * 
      * @param {String} title 
@@ -93,9 +111,7 @@ module.exports = class DiscordWebhook {
      */
     sendWebhook(title, data)
     {
-        const webhookClient = new WebhookClient({
-            url: this.discord_webhook_url
-        });
+        const webhookClient = new WebhookClient(this.getID(this.discord_webhook_url), this.getToken(this.discord_webhook_url));
 
         let d = {
             title: title,
